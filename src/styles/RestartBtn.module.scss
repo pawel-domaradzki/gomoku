@@ -1,0 +1,28 @@
+@use "./colors.scss" as *;
+
+.button {
+    box-sizing: border-box;
+    display: inline-flex;
+    background-color: $grey;
+    box-shadow: 0px 4px 0px 0px $dark-grey;
+    justify-content: center;
+
+    border: 0;
+    padding: 1.1em;
+    cursor: pointer;
+    text-decoration: none;
+
+    border: 0;
+    line-height: 1;
+    border-radius: 13px;
+    height: 52px;
+    img {
+        margin: auto;
+    }
+
+    &:hover,
+    &:focus {
+        background-color: $light-grey;
+        outline: none;
+    }
+}

@@ -1,0 +1,23 @@
+@use "./styles/colors.scss" as *;
+@use "./styles/reset.scss" as *;
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;700&display=swap');
+
+:root {
+  font-family: 'Outfit', sans-serif;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: $main;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+div {
+  display: flex;
+  text-align: center;
+  vertical-align: middle;
+}

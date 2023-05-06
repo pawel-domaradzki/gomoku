@@ -1,0 +1,42 @@
+@use "./colors.scss" as *;
+
+.button {
+    box-sizing: border-box;
+    display: inline-flex;
+    cursor: pointer;
+    text-decoration: none;
+    border: 0;
+    line-height: 1;
+    border-radius: 13px;
+    padding: 1.1em 2.5em;
+    justify-content: center;
+    color: $main;
+    background-color: $grey;
+    box-shadow: 0px 4px 0px 0px $dark-grey;
+    height: 52px;
+
+    &:hover,
+    &:focus {
+        background-color: $light-grey;
+        outline: none;
+    }
+}
+.button.yellow {
+    background-color: $yellow;
+    box-shadow: 0px 5px 0px 0px $dark-yellow;
+    &:hover,
+    &:focus {
+        background-color: $light-yellow;
+        outline: none;
+    }
+}
+
+.button.blue {
+    background-color: $blue;
+    box-shadow: 0px 5px 0px 0px $dark-blue;
+    &:hover,
+    &:focus {
+        background-color: $light-blue;
+        outline: none;
+    }
+}
