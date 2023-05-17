@@ -1,0 +1,45 @@
+@use "./colors.scss" as *;
+
+.container {
+    display: grid;
+    width: 623px;
+
+    .gameHeader {
+        display: flex;
+        justify-content: space-between;
+        min-height: 52px;
+        margin-bottom: 25px;
+        margin-top: auto;
+    }
+
+    .tilesGrid {
+        display: grid;
+        grid-template-columns: repeat(15, 1fr);
+        gap: 2px;
+    }
+
+    .turn {
+        color: $grey;
+        background-color: $secondary;
+        box-shadow: 0px 6px 0px 0px #10212a;
+        border-radius: 13px;
+        text-transform: uppercase;
+        position: relative;
+        display: flex;
+        width: 140px;
+        height: 52px;
+        justify-content: center;
+        align-items: center;
+        font-weight: 500;
+        svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+        }
+
+        path {
+            fill: $grey;
+            stroke: none;
+        }
+    }
+}

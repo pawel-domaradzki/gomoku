@@ -2,10 +2,11 @@
 
 .box {
     background-color: $secondary;
-    box-shadow: 0px 4px 0px 0px #10212a;
-    margin-bottom: 30px;
+    box-shadow: 0px 6px 0px 0px #10212a;
+    margin-top: 25px;
+    margin-bottom: 25px;
     border-radius: 13px;
-
+    align-items: center;
     display: flex;
     flex-direction: column;
     text-transform: uppercase;
@@ -26,7 +27,7 @@
 
 .switch {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     border-radius: 13px;
     width: 90%;
     background-color: $main;
@@ -36,11 +37,17 @@
     div {
         position: relative;
         border-radius: 8px;
-        margin-inline: 8px;
         margin-top: 8px;
         margin-bottom: 8px;
-        background-color: $grey;
         width: 45%;
+        cursor: pointer;
+
+        &:not(.picked):hover {
+            background-color: #213239;
+            path {
+                fill: $grey;
+            }
+        }
 
         svg {
             position: absolute;
@@ -53,8 +60,15 @@
         }
 
         path {
-            fill: $main;
+            fill: $grey;
             stroke: none;
+        }
+    }
+
+    .picked {
+        background-color: $grey;
+        path {
+            fill: $main;
         }
     }
 }

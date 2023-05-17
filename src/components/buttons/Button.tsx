@@ -4,6 +4,7 @@ import { FC } from "react";
 interface ButtonProps {
   variant?: ButtonVariant;
   children: string;
+  onClick?: () => void;
 }
 
 export enum ButtonVariant {
@@ -11,10 +12,14 @@ export enum ButtonVariant {
   Blue = "blue",
 }
 
-export const Button: FC<ButtonProps> = ({ children, variant }) => {
+export const Button: FC<ButtonProps> = ({ children, variant, onClick }) => {
   const colorClass = variant && styles[variant];
   const classes = colorClass
     ? `${styles.button} ${colorClass}`
     : `${styles.button}`;
-  return <button className={classes}>{children.toUpperCase()}</button>;
+  return (
+    <button className={classes} onClick={onClick}>
+      {children.toUpperCase()}
+    </button>
+  );
 };

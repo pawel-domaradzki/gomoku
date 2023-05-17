@@ -5,13 +5,13 @@ interface IconO {
 }
 
 const IconO: FC<IconO> = ({ filled }) => {
-  const fill = filled ? "#31C3BD" : "none";
+  const fill = filled ? "#F2B137" : "none";
   return (
     <svg viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M33 1c17.673 0 32 14.327 32 32 0 17.673-14.327 32-32 32C15.327 65 1 50.673 1 33 1 15.327 15.327 1 33 1Zm0 18.963c-7.2 0-13.037 5.837-13.037 13.037 0 7.2 5.837 13.037 13.037 13.037 7.2 0 13.037-5.837 13.037-13.037 0-7.2-5.837-13.037-13.037-13.037Z"
         stroke="#F2B137"
-        stroke-width="2"
+        strokeWidth="2"
         fill={fill}
       />
     </svg>
