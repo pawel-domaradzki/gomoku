@@ -2,7 +2,12 @@ import styles from "../styles/Tile.module.scss";
 import IconX from "./icons/IconX";
 import IconO from "./icons/IconO";
 
-const Tile = ({ value, onTileClick }) => {
+interface TileProps {
+  value: string;
+  onTileClick: () => void;
+}
+
+const Tile = ({ value, onTileClick }: TileProps) => {
   const displayIcon = value === "x" ? <IconX filled /> : <IconO filled />;
 
   return (

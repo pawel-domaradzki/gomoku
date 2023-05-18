@@ -1,16 +1,22 @@
 import Tile from "./Tile";
 
-const Row = ({ tiles, handleTileClick, row }) => {
-  const renderBoard = tiles.map((el, index) => {
-    return (
-      <Tile
-        key={index}
-        value={el}
-        onTileClick={() => handleTileClick(row, index)}
-      />
-    );
-  });
+interface RowProps {
+  tiles: string[];
+  handleTileClick: (row: number, index: number) => void;
+  row: number;
+}
 
-  return renderBoard;
+const Row = ({ tiles, handleTileClick, row }: RowProps) => {
+  return (
+    <>
+      {tiles.map((el, index) => (
+        <Tile
+          key={index}
+          value={el}
+          onTileClick={() => handleTileClick(row, index)}
+        />
+      ))}
+    </>
+  );
 };
 export default Row;

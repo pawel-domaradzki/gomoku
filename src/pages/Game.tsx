@@ -6,14 +6,15 @@ import Restart from "../components/buttons/Restart";
 import IconO from "../components/icons/IconO";
 import IconX from "../components/icons/IconX";
 import styles from "../styles/Game.module.scss";
-import { Maybe } from "../types";
 
 import { GameModeContext, PlayerContext } from "../Contexts";
+
+import { BoardArr } from "../types";
 
 import Results from "../components/Results";
 
 const createBoard = (rows: number, columns: number) => {
-  const board: Board = [];
+  const board: BoardArr = [];
   for (let i = 0; i < rows; i++) {
     board.push(Array(columns).fill(null));
   }
@@ -39,7 +40,7 @@ const Game = () => {
     }
   }, [playerTurn, isInitialRender]);
 
-  function getAvailableCells(board: Board) {
+  function getAvailableCells(board: BoardArr) {
     const availableCells = [];
 
     for (let row = 0; row < board.length; row++) {
@@ -53,7 +54,7 @@ const Game = () => {
     return availableCells;
   }
 
-  function determineCPUMove(board: Board) {
+  function determineCPUMove(board: BoardArr) {
     const availableCells = getAvailableCells(board);
 
     const randomIndex = Math.floor(Math.random() * availableCells.length);
@@ -117,7 +118,7 @@ const Game = () => {
     setWin(true);
   }
 
-  const calculateWinner = (board: Board, player: string) => {
+  const calculateWinner = (board: BoardArr, player: string) => {
     for (let i = 0; i < 15; i++) {
       for (let j = 0; j < 11; j++) {
         checkDirection({ row: i, col: j, rowDir: 0, colDir: 1, player, board });
@@ -177,13 +178,11 @@ const Game = () => {
 
 export default Game;
 
-type Board = string[][];
-
 interface CheckDirectionParams {
   row: number;
   col: number;
   rowDir: number;
   colDir: number;
   player: string;
-  board: Board;
+  board: BoardArr;
 }

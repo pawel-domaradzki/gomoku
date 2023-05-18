@@ -1,7 +1,11 @@
 import { useContext } from "react";
 import { GameModeContext } from "../Contexts";
 
-const Results = ({ playerType }) => {
+interface ResultsProps {
+  playerType: string | null;
+}
+
+const Results = ({ playerType }: ResultsProps) => {
   const { gameMode } = useContext(GameModeContext);
 
   const playerOne = playerType === "x" ? "p1" : "p2";

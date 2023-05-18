@@ -2,7 +2,12 @@ import { useContext } from "react";
 import { GameModeContext } from "../Contexts";
 import styles from "../styles/RoundOver.module.scss";
 
-const RoundOver = ({ startNextRound, winner }) => {
+interface RoundOverProps {
+  startNextRound: () => void;
+  winner: string;
+}
+
+const RoundOver = ({ startNextRound, winner }: RoundOverProps) => {
   const { gameMode } = useContext(GameModeContext);
 
   const printMsg = () => {
@@ -17,7 +22,7 @@ const RoundOver = ({ startNextRound, winner }) => {
     <div className={styles.overlay}>
       <div className={styles.roundOver}>
         <h3>{printMsg()}</h3>
-        <div>icon lsot</div>
+        <div>icon lost</div>
         <div className={styles.nextRound}>
           <button>quit</button>
           <button onClick={startNextRound}>next round</button>
