@@ -3,6 +3,7 @@
 .container {
     display: grid;
     width: 623px;
+    height: auto;
 
     .gameHeader {
         display: flex;
@@ -16,6 +17,7 @@
         display: grid;
         grid-template-columns: repeat(15, 1fr);
         gap: 2px;
+        margin-bottom: auto;
     }
 
     .turn {

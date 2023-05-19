@@ -3,17 +3,48 @@
 .tile {
     background-color: $secondary;
     box-shadow: 0px 2px 0px 0px #10212a;
-    min-width: 25px;
-    min-height: 25px;
-    border-radius: 2px;
+    min-width: 15px;
+    min-height: 15px;
+    aspect-ratio: 10/9;
+    border-radius: 1px;
     position: relative;
+
     svg {
         position: absolute;
         top: 50%;
         left: 50%;
-        margin-left: -10px;
-        margin-top: -10px;
-        width: 20px;
-        height: 20px;
+        margin-left: -7px;
+        margin-top: -7px;
+        width: 14px;
+        height: 14px;
+    }
+}
+
+.highlighted.x {
+    background-color: $blue;
+
+    path {
+        fill: $secondary;
+    }
+}
+
+.highlighted.o {
+    background-color: $yellow;
+
+    path {
+        fill: $secondary;
+    }
+}
+
+@media (min-width: 1024px) {
+    .tile {
+        border-radius: 2px;
+
+        svg {
+            margin-left: -10px;
+            margin-top: -10px;
+            width: 20px;
+            height: 20px;
+        }
     }
 }

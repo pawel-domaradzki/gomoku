@@ -23,22 +23,25 @@ const createBoard = (rows: number, columns: number) => {
 
 const Game = () => {
   const [board, setBoard] = useState<string[][]>(createBoard(15, 15));
-  const [playerTurn, setPlayerTurn] = useState(true);
+  const [cpuTurn, setCpuTurn] = useState(false);
 
   const { gameMode } = useContext(GameModeContext);
 
   const { playerMark, setPlayerMark } = useContext(PlayerContext);
 
-  const [win, setWin] = useState(false);
+  const [winningPositions, setWinningPositions] = useState<number[][]>([]);
+  const [winner, setWinner] = useState("");
   const [isInitialRender, setIsInitialRender] = useState(true);
 
   useEffect(() => {
+    if (winningPositions.length) return;
+
     if (isInitialRender) {
       setIsInitialRender(false);
     } else {
       handleCPUTurn();
     }
-  }, [playerTurn, isInitialRender]);
+  }, [cpuTurn, isInitialRender, winningPositions]);
 
   function getAvailableCells(board: BoardArr) {
     const availableCells = [];
@@ -63,41 +66,49 @@ const Game = () => {
   }
 
   const handleTileClick = (row: number, column: number) => {
-    if (win || !board) {
+    if (winningPositions.length || !board || cpuTurn) {
       return;
     }
-    const nextMove = board.slice();
 
-    if (playerMark) {
-      nextMove[row][column] = playerMark;
+    const newBoard = board.slice();
 
-      setBoard(nextMove);
+    if (playerMark && !newBoard[row][column]) {
+      newBoard[row][column] = playerMark;
+
+      setBoard(newBoard);
+      setPlayerMark(playerMark === "x" ? "o" : "x");
       calculateWinner(board, playerMark);
     }
 
     if (gameMode === "pvp") {
-      setPlayerMark(playerMark === "x" ? "o" : "x");
       return;
     }
 
-    setPlayerTurn(false);
+    setCpuTurn(true);
   };
 
   const handleCPUTurn = () => {
-    if (!playerTurn && !isInitialRender && board) {
-      const cpuMark = playerMark === "x" ? "o" : "x";
-      const nextMove = [...board];
-      const { row, col } = determineCPUMove(nextMove);
+    if (cpuTurn && !isInitialRender && board) {
+      const cpuMark = playerMark === "x" ? "x" : "o";
 
-      nextMove[row][col] = cpuMark;
+      setTimeout(() => {
+        const nextMove = [...board];
+        const { row, col } = determineCPUMove(nextMove);
 
-      setBoard(nextMove);
-      setPlayerTurn(true);
+        nextMove[row][col] = cpuMark;
+
+        setBoard(nextMove);
+        setCpuTurn(false);
+        setPlayerMark(playerMark === "x" ? "o" : "x");
+        calculateWinner(board, cpuMark);
+      }, 700);
     }
   };
 
   const startNextRound = () => {
-    setWin(!win);
+    setWinner("");
+    setWinningPositions([]);
+
     setBoard(createBoard(15, 15));
   };
 
@@ -109,19 +120,31 @@ const Game = () => {
     player,
     board,
   }: CheckDirectionParams) {
-    for (let i = 0; i < 3; i++) {
+    const winningPositions: number[][] = [];
+    for (let i = 0; i < 5; i++) {
       if (board[row + i * rowDir][col + i * colDir] !== player) {
         return;
       }
+      winningPositions.push([row + i * rowDir, col + i * colDir]);
     }
 
-    setWin(true);
+    setWinningPositions(winningPositions);
+    setWinner(player);
+
+    return;
   }
 
   const calculateWinner = (board: BoardArr, player: string) => {
     for (let i = 0; i < 15; i++) {
       for (let j = 0; j < 11; j++) {
-        checkDirection({ row: i, col: j, rowDir: 0, colDir: 1, player, board });
+        checkDirection({
+          row: i,
+          col: j,
+          rowDir: 0,
+          colDir: 1,
+          player,
+          board,
+        });
       }
     }
 
@@ -153,12 +176,8 @@ const Game = () => {
 
   return (
     <>
-      {win && (
-        <RoundOver
-          startNextRound={startNextRound}
-          winner={playerMark === "x" ? "o" : "x"}
-        />
-      )}
+      <RoundOver startNextRound={startNextRound} winner={winner} />
+
       <div className={styles.container}>
         <div className={styles.gameHeader}>
           <img src={Logo} alt="logo" width="72" height="32" />
@@ -168,7 +187,11 @@ const Game = () => {
           <Restart />
         </div>
         <div className={styles.tilesGrid}>
-          <Board board={board} handleTileClick={handleTileClick} />
+          <Board
+            board={board}
+            handleTileClick={handleTileClick}
+            winningPositions={winningPositions}
+          />
         </div>
         <Results playerType={playerMark} />
       </div>

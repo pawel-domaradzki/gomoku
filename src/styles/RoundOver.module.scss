@@ -12,10 +12,19 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    h3 {
+        font-weight: 600;
+        color: $grey;
+        font-size: 20px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
 }
 
 .overlay {
-    z-index: 1;
+    opacity: 0;
+    z-index: -1;
     position: fixed;
     top: 0;
     left: 0;
@@ -24,6 +33,40 @@
     background-color: rgba(0, 0, 0, 0.5);
 }
 
+.overlay.visible {
+    transition: opacity 0.3s ease-in-out 0.8s;
+    opacity: 1;
+    z-index: 1;
+}
+
 .nextRound {
     display: flex;
+    button {
+        margin: 10px;
+    }
+}
+
+.takesRound {
+    display: flex;
+
+    svg {
+        width: 90px;
+        height: 90px;
+    }
+
+    div {
+        display: flex;
+        line-height: 90px;
+        margin-left: 20px;
+        text-transform: uppercase;
+        white-space: nowrap;
+        font-size: 50px;
+        font-weight: 600;
+        &.x {
+            color: $blue;
+        }
+        &.o {
+            color: $yellow;
+        }
+    }
 }
