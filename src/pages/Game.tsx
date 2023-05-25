@@ -29,6 +29,7 @@ const Game = () => {
 
   const [isDraw, setIsDraw] = useState(false);
   const [pause, setPause] = useState(false);
+  const [startingPlayer, setStartingPlayer] = useState("");
   const [winner, setWinner] = useState("");
   const [isInitialRender, setIsInitialRender] = useState(true);
   const [winningPositions, setWinningPositions] = useState<number[][]>([]);
@@ -43,7 +44,8 @@ const Game = () => {
   useEffect(() => {
     if (winningPositions.length) return;
 
-    if (isInitialRender) {
+    if (isInitialRender && playerMark) {
+      setStartingPlayer(playerMark);
       setIsInitialRender(false);
     } else {
       handleCPUTurn();
@@ -164,6 +166,7 @@ const Game = () => {
   return (
     <>
       <RoundOver
+        startingPlayer={startingPlayer}
         startNextRound={startNextRound}
         winner={winner}
         draw={isDraw}
@@ -193,6 +196,7 @@ const Game = () => {
           />
         </div>
         <Results
+          startingPlayer={startingPlayer}
           drawCount={drawCount}
           playersScore={{ pOneScore, pTwoScore }}
         />

@@ -1,6 +1,7 @@
 .container {
     display: flex;
     flex-direction: column;
+    width: 330px;
     margin: auto 0;
     align-items: center;
     gap: 18px;
@@ -12,5 +13,11 @@
 
     button {
         width: 100%;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        width: 460px;
     }
 }

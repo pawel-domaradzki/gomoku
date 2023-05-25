@@ -6,10 +6,13 @@
     height: 360px;
 
     .gameHeader {
-        display: flex;
-        justify-content: space-between;
+        display: grid;
+        width: 100%;
+        grid-template-columns: [first] 20% auto [last] 20%;
+        margin: 0 auto;
         height: 42px;
         margin-bottom: 25px;
+        justify-content: space-between;
     }
 
     .gomokuGrid {
@@ -23,6 +26,7 @@
         color: $grey;
         background-color: $secondary;
         box-shadow: 0px 6px 0px 0px #10212a;
+        margin: 0 auto;
         border-radius: 13px;
         text-transform: uppercase;
         position: relative;
@@ -57,13 +61,13 @@
         width: 500px;
         height: 500px;
         .gameHeader {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             min-height: 52px;
             margin-bottom: 25px;
             margin-top: auto;
             .logo {
+                margin-top: auto;
+                margin-bottom: auto;
+                margin-right: auto;
                 height: 40px;
                 width: 90px;
             }

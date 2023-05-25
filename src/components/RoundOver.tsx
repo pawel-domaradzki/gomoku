@@ -10,22 +10,13 @@ import IconO from "./icons/IconO";
 
 import styles from "../styles/RoundOver.module.scss";
 
-interface RoundOverProps {
-  startNextRound: () => void;
-  winner: string;
-  draw: boolean;
-  pause: boolean;
-  displayPause: () => void;
-}
-
-const { Yellow } = ButtonVariant;
-
 const RoundOver = ({
   startNextRound,
   winner,
   draw,
   pause,
   displayPause,
+  startingPlayer,
 }: RoundOverProps) => {
   const { gameMode } = useContext(GameModeContext);
 
@@ -36,7 +27,11 @@ const RoundOver = ({
   const printMsg = () => {
     if (draw) return;
     if (gameMode === "cpu") {
-      return "you won!";
+      if (winner === startingPlayer) {
+        return "you won!";
+      } else {
+        return "oh No, you lost...";
+      }
     }
 
     return `player ${winner} win`;
@@ -87,3 +82,14 @@ const RoundOver = ({
 };
 
 export default RoundOver;
+
+interface RoundOverProps {
+  startNextRound: () => void;
+  winner: string;
+  draw: boolean;
+  pause: boolean;
+  displayPause: () => void;
+  startingPlayer: string;
+}
+
+const { Yellow } = ButtonVariant;

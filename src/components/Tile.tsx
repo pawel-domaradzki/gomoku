@@ -3,14 +3,6 @@ import styles from "../styles/Tile.module.scss";
 import IconX from "./icons/IconX";
 import IconO from "./icons/IconO";
 
-interface TileProps {
-  value: string;
-  onTileClick: () => void;
-  winningPositions: number[][];
-  row: number;
-  column: number;
-}
-
 const Tile = ({
   value,
   onTileClick,
@@ -36,3 +28,11 @@ const Tile = ({
 };
 
 export default Tile;
+
+interface TileProps {
+  value: string;
+  onTileClick: () => void;
+  winningPositions: number[][];
+  row: number;
+  column: number;
+}
