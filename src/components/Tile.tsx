@@ -26,7 +26,6 @@ const Tile = ({
     [styles.highlighted]: isHighlighted,
   });
 
-  if (isHighlighted) console.log("yes");
   const displayIcon = value === "x" ? <IconX filled /> : <IconO filled />;
 
   return (

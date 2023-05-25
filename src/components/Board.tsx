@@ -1,6 +1,8 @@
-import { BoardArr } from "../types";
 import React, { ReactElement } from "react";
+
 import Tile from "./Tile";
+
+import { BoardArr } from "../types";
 
 const Board = ({
   board,

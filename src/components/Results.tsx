@@ -1,37 +1,45 @@
 import { useContext } from "react";
 import { GameModeContext } from "../Contexts";
 
-interface ResultsProps {
-  playerType: string | null;
-}
+import styles from "../styles/Results.module.scss";
 
-const Results = ({ playerType }: ResultsProps) => {
+const Results = ({ drawCount, playersScore }: ResultsProps) => {
   const { gameMode } = useContext(GameModeContext);
 
-  const playerOne = playerType === "x" ? "p1" : "p2";
+  const playerOne = gameMode === "pvp" ? "p1" : "you";
   const playerTwo = gameMode === "pvp" ? "p2" : "cpu";
+  const { pOneScore, pTwoScore } = playersScore;
 
   return (
-    <div>
-      <div>
+    <div className={styles.resultsContainer}>
+      <div className={styles.p1}>
         <p>
-          {playerType} <span>({playerOne})</span>
+          X <span>({playerOne})</span>
         </p>
+        <h2>{pOneScore}</h2>
       </div>
 
-      <div>
-        <p>
-          {playerType} <span>(draw)</span>
-        </p>
+      <div className={styles.ties}>
+        <p>Ties</p>
+        <h2>{drawCount}</h2>
       </div>
 
-      <div>
+      <div className={styles.p2}>
         <p>
-          {playerType} <span>({playerTwo})</span>
+          O <span>({playerTwo})</span>
         </p>
+        <h2>{pTwoScore}</h2>
       </div>
     </div>
   );
 };
 
 export default Results;
+
+interface ResultsProps {
+  drawCount: number;
+  playersScore: {
+    pOneScore: number;
+    pTwoScore: number;
+  };
+}

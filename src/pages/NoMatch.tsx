@@ -1,7 +1,7 @@
 const NoMatch = () => {
   return (
     <div>
-      <h2>NoMatch</h2>
+      <h2>Nothing here...</h2>
     </div>
   );
 };

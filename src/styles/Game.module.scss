@@ -2,18 +2,17 @@
 
 .container {
     display: grid;
-    width: 623px;
-    height: auto;
+    width: 360px;
+    height: 360px;
 
     .gameHeader {
         display: flex;
         justify-content: space-between;
-        min-height: 52px;
+        height: 42px;
         margin-bottom: 25px;
-        margin-top: auto;
     }
 
-    .tilesGrid {
+    .gomokuGrid {
         display: grid;
         grid-template-columns: repeat(15, 1fr);
         gap: 2px;
@@ -28,8 +27,8 @@
         text-transform: uppercase;
         position: relative;
         display: flex;
-        width: 140px;
-        height: 52px;
+        width: 130px;
+        height: 100%;
         justify-content: center;
         align-items: center;
         font-weight: 500;
@@ -43,5 +42,45 @@
             fill: $grey;
             stroke: none;
         }
+    }
+}
+
+@media (min-width: 425px) {
+    .container {
+        width: 400px;
+        height: 400px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        width: 500px;
+        height: 500px;
+        .gameHeader {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 52px;
+            margin-bottom: 25px;
+            margin-top: auto;
+            .logo {
+                height: 40px;
+                width: 90px;
+            }
+        }
+    }
+}
+
+@media (min-width: 1280px) {
+    .container {
+        width: 623px;
+        height: 623px;
+    }
+}
+
+@media (min-width: 2560px) {
+    .container {
+        width: 753px;
+        height: 753px;
     }
 }

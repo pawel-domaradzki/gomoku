@@ -1,37 +1,44 @@
 import { useContext, useEffect, useState } from "react";
-import Logo from "../../src/assets/logo.svg";
+import { GameModeContext, PlayerContext } from "../Contexts";
+
+import Results from "../components/Results";
 import Board from "../components/Board";
 import RoundOver from "../components/RoundOver";
 import Restart from "../components/buttons/Restart";
 import IconO from "../components/icons/IconO";
 import IconX from "../components/icons/IconX";
+
+import Logo from "../../src/assets/logo.svg";
 import styles from "../styles/Game.module.scss";
 
-import { GameModeContext, PlayerContext } from "../Contexts";
+import { cpuBlockingMove, determineCPUMove } from "../utility/cpuLogic.ts";
+import { createBoard, getAvailableTiles } from "../utility/board.ts";
+import {
+  CalculateParams,
+  checkDirections,
+} from "../utility/inARowDetection.ts";
 
 import { BoardArr } from "../types";
 
-import Results from "../components/Results";
-
-const createBoard = (rows: number, columns: number) => {
-  const board: BoardArr = [];
-  for (let i = 0; i < rows; i++) {
-    board.push(Array(columns).fill(null));
-  }
-  return board;
-};
-
 const Game = () => {
   const [board, setBoard] = useState<string[][]>(createBoard(15, 15));
+
   const [cpuTurn, setCpuTurn] = useState(false);
+  const [cpuNextMove, setCpuNextMove] = useState({});
+  const [cpuLastMove, setCpuLastMove] = useState({});
 
-  const { gameMode } = useContext(GameModeContext);
-
-  const { playerMark, setPlayerMark } = useContext(PlayerContext);
-
-  const [winningPositions, setWinningPositions] = useState<number[][]>([]);
+  const [isDraw, setIsDraw] = useState(false);
+  const [pause, setPause] = useState(false);
   const [winner, setWinner] = useState("");
   const [isInitialRender, setIsInitialRender] = useState(true);
+  const [winningPositions, setWinningPositions] = useState<number[][]>([]);
+
+  const [pOneScore, setPOneScore] = useState(0);
+  const [pTwoScore, setPTwoScore] = useState(0);
+  const [drawCount, setDrawCount] = useState(0);
+
+  const { gameMode } = useContext(GameModeContext);
+  const { playerMark, setPlayerMark } = useContext(PlayerContext);
 
   useEffect(() => {
     if (winningPositions.length) return;
@@ -41,171 +48,157 @@ const Game = () => {
     } else {
       handleCPUTurn();
     }
+
+    checkIfDraw(board);
   }, [cpuTurn, isInitialRender, winningPositions]);
 
-  function getAvailableCells(board: BoardArr) {
-    const availableCells = [];
+  const switchPlayerMark = () => {
+    setPlayerMark(playerMark === "x" ? "o" : "x");
+  };
 
-    for (let row = 0; row < board.length; row++) {
-      for (let col = 0; col < board[row].length; col++) {
-        if (board[row][col] === null) {
-          availableCells.push({ row, col });
-        }
-      }
+  const checkIfDraw = (currentBoard: BoardArr) => {
+    const availableTiles = getAvailableTiles(currentBoard);
+
+    const hasWinner = winningPositions.length > 0;
+
+    if (availableTiles.length === 0 && !hasWinner) {
+      setIsDraw(true);
+      setDrawCount((prevCount) => prevCount + 1);
     }
-
-    return availableCells;
-  }
-
-  function determineCPUMove(board: BoardArr) {
-    const availableCells = getAvailableCells(board);
-
-    const randomIndex = Math.floor(Math.random() * availableCells.length);
-
-    return availableCells[randomIndex];
-  }
+  };
 
   const handleTileClick = (row: number, column: number) => {
     if (winningPositions.length || !board || cpuTurn) {
       return;
     }
 
-    const newBoard = board.slice();
+    const newBoard = [...board];
 
-    if (playerMark && !newBoard[row][column]) {
+    if (playerMark && !newBoard[row][column] && !cpuTurn) {
       newBoard[row][column] = playerMark;
 
       setBoard(newBoard);
-      setPlayerMark(playerMark === "x" ? "o" : "x");
-      calculateWinner(board, playerMark);
-    }
+      switchPlayerMark();
 
-    if (gameMode === "pvp") {
-      return;
-    }
+      checkDirections(board, playerMark, {
+        performBlock,
+        updateWinner,
+      });
 
-    setCpuTurn(true);
+      if (gameMode === "pvp") return;
+
+      setCpuTurn(true);
+    }
   };
 
   const handleCPUTurn = () => {
     if (cpuTurn && !isInitialRender && board) {
       const cpuMark = playerMark === "x" ? "x" : "o";
 
-      setTimeout(() => {
-        const nextMove = [...board];
-        const { row, col } = determineCPUMove(nextMove);
+      const cpuMove = determineCPUMove(board, cpuNextMove, cpuLastMove);
 
-        nextMove[row][col] = cpuMark;
+      setCpuLastMove(cpuMove);
 
-        setBoard(nextMove);
+      const cpuTurnPromise = new Promise<void>((resolve) => {
+        setTimeout(() => {
+          const nextMove = [...board];
+          const { row, col } = cpuMove;
+
+          nextMove[row][col] = cpuMark;
+
+          setBoard(nextMove);
+          switchPlayerMark();
+
+          checkDirections(board, cpuMark, {
+            performBlock,
+            updateWinner,
+          });
+
+          resolve();
+        }, 700);
+      });
+
+      cpuTurnPromise.then(() => {
         setCpuTurn(false);
-        setPlayerMark(playerMark === "x" ? "o" : "x");
-        calculateWinner(board, cpuMark);
-      }, 700);
+      });
     }
   };
 
   const startNextRound = () => {
+    if (winner === "x") {
+      setPOneScore((prevScore) => prevScore + 1);
+    } else if (winner === "o") {
+      setPTwoScore((prevScore) => prevScore + 1);
+    }
+
+    setIsDraw(false);
     setWinner("");
     setWinningPositions([]);
-
     setBoard(createBoard(15, 15));
   };
 
-  function checkDirection({
-    row,
-    col,
-    rowDir,
-    colDir,
-    player,
-    board,
-  }: CheckDirectionParams) {
-    const winningPositions: number[][] = [];
-    for (let i = 0; i < 5; i++) {
-      if (board[row + i * rowDir][col + i * colDir] !== player) {
-        return;
-      }
-      winningPositions.push([row + i * rowDir, col + i * colDir]);
-    }
+  const performBlock = (
+    hasThreeInARow: number[][],
+    params: CalculateParams
+  ) => {
+    const { direction, board } = params;
 
-    setWinningPositions(winningPositions);
+    const isBlockingMove = cpuBlockingMove(hasThreeInARow, direction, board);
+
+    if (isBlockingMove) {
+      setCpuNextMove(isBlockingMove);
+    }
+  };
+
+  const updateWinner = (fiveInARow: number[][], params: CalculateParams) => {
+    const { player } = params;
+
+    setWinningPositions(fiveInARow);
     setWinner(player);
+  };
 
-    return;
-  }
-
-  const calculateWinner = (board: BoardArr, player: string) => {
-    for (let i = 0; i < 15; i++) {
-      for (let j = 0; j < 11; j++) {
-        checkDirection({
-          row: i,
-          col: j,
-          rowDir: 0,
-          colDir: 1,
-          player,
-          board,
-        });
-      }
-    }
-
-    for (let i = 0; i < 11; i++) {
-      for (let j = 0; j < 15; j++) {
-        checkDirection({ row: i, col: j, rowDir: 1, colDir: 0, player, board });
-      }
-    }
-
-    for (let i = 0; i < 11; i++) {
-      for (let j = 0; j < 11; j++) {
-        checkDirection({ row: i, col: j, rowDir: 1, colDir: 1, player, board });
-      }
-    }
-
-    for (let i = 0; i < 11; i++) {
-      for (let j = 4; j < 15; j++) {
-        checkDirection({
-          row: i,
-          col: j,
-          rowDir: 1,
-          colDir: -1,
-          player,
-          board,
-        });
-      }
-    }
+  const displayPauseOverlay = () => {
+    setPause(!pause);
   };
 
   return (
     <>
-      <RoundOver startNextRound={startNextRound} winner={winner} />
+      <RoundOver
+        startNextRound={startNextRound}
+        winner={winner}
+        draw={isDraw}
+        pause={pause}
+        displayPause={displayPauseOverlay}
+      />
 
       <div className={styles.container}>
         <div className={styles.gameHeader}>
-          <img src={Logo} alt="logo" width="72" height="32" />
+          <img
+            className={styles.logo}
+            src={Logo}
+            alt="logo"
+            width="72"
+            height="32"
+          />
           <div className={styles.turn}>
             {(playerMark === "x" && <IconX />) || <IconO />} <span>Turn</span>
           </div>
-          <Restart />
+          <Restart onClick={() => setPause(!pause)} />
         </div>
-        <div className={styles.tilesGrid}>
+        <div className={styles.gomokuGrid}>
           <Board
             board={board}
             handleTileClick={handleTileClick}
             winningPositions={winningPositions}
           />
         </div>
-        <Results playerType={playerMark} />
+        <Results
+          drawCount={drawCount}
+          playersScore={{ pOneScore, pTwoScore }}
+        />
       </div>
     </>
   );
 };
 
 export default Game;
-
-interface CheckDirectionParams {
-  row: number;
-  col: number;
-  rowDir: number;
-  colDir: number;
-  player: string;
-  board: BoardArr;
-}

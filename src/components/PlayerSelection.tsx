@@ -24,7 +24,7 @@ const PlayerSelection = () => {
         </div>
       </div>
 
-      <h4>Remember: X Goes first</h4>
+      <h4>Gomoku, also called Five in a Row</h4>
     </div>
   );
 };

@@ -5,6 +5,7 @@
     box-shadow: 0px 2px 0px 0px #10212a;
     min-width: 15px;
     min-height: 15px;
+
     aspect-ratio: 10/9;
     border-radius: 1px;
     position: relative;
@@ -36,7 +37,7 @@
     }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
     .tile {
         border-radius: 2px;
 
@@ -45,6 +46,17 @@
             margin-top: -10px;
             width: 20px;
             height: 20px;
+        }
+    }
+}
+
+@media (min-width: 2560px) {
+    .tile {
+        svg {
+            margin-left: -13px;
+            margin-top: -13px;
+            width: 26px;
+            height: 26px;
         }
     }
 }

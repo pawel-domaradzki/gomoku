@@ -1,27 +1,40 @@
 import { useContext } from "react";
 import { GameModeContext } from "../Contexts";
+
+import { Link } from "react-router-dom";
+import classNames from "classnames";
+
+import { Button, ButtonVariant } from "./buttons/Button";
 import IconX from "./icons/IconX";
 import IconO from "./icons/IconO";
+
 import styles from "../styles/RoundOver.module.scss";
-import classNames from "classnames";
-import { Button, ButtonVariant } from "./buttons/Button";
-import { Link } from "react-router-dom";
 
 interface RoundOverProps {
   startNextRound: () => void;
   winner: string;
+  draw: boolean;
+  pause: boolean;
+  displayPause: () => void;
 }
 
 const { Yellow } = ButtonVariant;
 
-const RoundOver = ({ startNextRound, winner }: RoundOverProps) => {
+const RoundOver = ({
+  startNextRound,
+  winner,
+  draw,
+  pause,
+  displayPause,
+}: RoundOverProps) => {
   const { gameMode } = useContext(GameModeContext);
 
-  const colorStyle = winner || "x";
+  const display = winner || pause || draw;
 
-  const isVisible = winner === "o" || winner === "x" ? true : false;
+  const colorStyle = winner || "draw";
 
   const printMsg = () => {
+    if (draw) return;
     if (gameMode === "cpu") {
       return "you won!";
     }
@@ -30,7 +43,7 @@ const RoundOver = ({ startNextRound, winner }: RoundOverProps) => {
   };
 
   const overlayStyles = classNames(styles.overlay, {
-    [styles.visible]: isVisible,
+    [styles.visible]: display,
   });
 
   const displayIcon = winner === "x" ? <IconX filled /> : <IconO filled />;
@@ -38,18 +51,35 @@ const RoundOver = ({ startNextRound, winner }: RoundOverProps) => {
   return (
     <div className={overlayStyles}>
       <div className={styles.roundOver}>
-        <h3>{printMsg()}</h3>
+        <h3>{!pause && printMsg()}</h3>
         <div className={styles.takesRound}>
-          {winner && displayIcon}{" "}
-          <div className={styles[colorStyle]}>takes the round</div>
+          {winner && displayIcon}
+          <div className={styles[colorStyle]}>
+            {(draw && "round tied") ||
+              (pause && "Restart Game?") ||
+              "takes the round"}
+          </div>
         </div>
         <div className={styles.nextRound}>
-          <Link to="/">
-            <Button>quit</Button>
-          </Link>
-          <Button onClick={startNextRound} variant={Yellow}>
-            next round
-          </Button>
+          {!pause ? (
+            <>
+              <Link to="/">
+                <Button>quit</Button>
+              </Link>
+              <Button onClick={startNextRound} variant={Yellow}>
+                next round
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button onClick={() => displayPause()}>No, cancel</Button>
+              <Link to="/">
+                <Button onClick={startNextRound} variant={Yellow}>
+                  Yes, Restart
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </div>

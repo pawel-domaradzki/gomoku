@@ -48,25 +48,49 @@
 
 .takesRound {
     display: flex;
+    margin-bottom: 10px;
 
     svg {
-        width: 90px;
-        height: 90px;
+        width: 45px;
+        height: 45px;
     }
 
     div {
         display: flex;
-        line-height: 90px;
+        line-height: 45px;
         margin-left: 20px;
         text-transform: uppercase;
         white-space: nowrap;
-        font-size: 50px;
+        font-size: 28px;
         font-weight: 600;
         &.x {
             color: $blue;
         }
         &.o {
             color: $yellow;
+        }
+        &.draw {
+            color: $grey;
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .takesRound {
+        margin-bottom: 0;
+        svg {
+            width: 90px;
+            height: 90px;
+        }
+
+        div {
+            display: flex;
+            line-height: 90px;
+            margin-left: 20px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            font-size: 50px;
+            font-weight: 600;
         }
     }
 }

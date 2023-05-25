@@ -1,10 +1,12 @@
+import { useContext } from "react";
+import { GameModeContext } from "../Contexts";
+import { Link } from "react-router-dom";
+
 import { Button, ButtonVariant } from "../components/buttons/Button";
 import PlayerSelection from "../components/PlayerSelection";
+
 import styles from "../styles/NewGameMenu.module.scss";
 import Logo from "../assets/logo.svg";
-import { Link } from "react-router-dom";
-import { GameModeContext } from "../Contexts";
-import { useContext } from "react";
 
 const NewGameMenu = () => {
   const { setGameMode } = useContext(GameModeContext);
