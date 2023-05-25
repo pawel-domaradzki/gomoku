@@ -58,8 +58,8 @@
 
 @media (min-width: 768px) {
     .container {
-        width: 500px;
-        height: 500px;
+        width: 450px;
+        height: 450px;
         .gameHeader {
             min-height: 52px;
             margin-bottom: 25px;
@@ -75,10 +75,10 @@
     }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1536px) {
     .container {
-        width: 623px;
-        height: 623px;
+        width: 550px;
+        height: 550px;
     }
 }
 
